@@ -37,3 +37,15 @@ These features aren’t available for external objects.
 When developers use Apex to manipulate external object records, asynchronous timing and an active background queue minimize potential save conflicts. A specialized set of Apex methods and keywords handles potential timing issues with write execution. Apex also lets you retrieve the results of delete and upsert operations. Use the BackgroundOperation object to monitor job progress for write operations via the API or SOQL.
 
 ## Get Started with the Apex Connector Framework
+1. Create a Sample DataSource.Connection Class
+First, create a DataSource.Connection class to enable Salesforce to obtain the external system’s schema and to handle queries and searches of the external data.
+2. Create a Sample DataSource.Provider Class
+Now you need a class that extends and overrides a few methods in DataSource.Provider.
+3. Set Up Salesforce Connect to Use Your Custom Adapter
+After you create your DataSource.Connection and DataSource.Provider classes, the Salesforce Connect custom adapter becomes available in Setup.
+
+
+The DataSource.Connection class contains these methods. • query
+• search
+• sync
+• upsertRows • deleteRows
