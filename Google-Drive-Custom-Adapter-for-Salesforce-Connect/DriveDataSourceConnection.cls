@@ -144,13 +144,54 @@ global class DriveDataSourceConnection extends DataSource.Connection {
     *   Returns an updated map with the External ID and
     *   Display URL values.
     **/
-    public Map<String, Object> createRow (
-        Map<String, Object> item) {
-            Map<String, Object> row = new Map<String, Object>();
-            for ( String key : item.keySet() ) {
-                
+    public Map<String, Object> createRow (Map<String, Object> item) {
+        Map<String, Object> row = new Map<String, Object>();
+        for ( String key : item.keySet() ) {
+            if (key == 'id') {
+                row.put('ExternalId', item.get(key));
+            } else if {
+                else if (key=='selfLink') {
+                    row.put(key, item.get(key));
+                    row.put('DisplayUrl', item.get(key));
+                } else {
+                    row.put(key, item.get(key));
+                }
             }
-        }
-    )
 
+            return row;
+        }
+
+        static String mockResponse = '{' +
+            '  "kind": "drive#file",' +
+            '  "id": "12345",' +
+            '  "selfLink": "files/12345",' +
+            '  "title": "Mock File",' +
+            '  "mimeType": "application/text",' +
+            '  "description": "Mock response that’s used during tests",' +
+            '  "createdDate": "2016-04-20",' +
+            '  "modifiedDate": "2016-04-20",' +
+            '  "version": 1' +
+        '}';
+
+            /**
+            *     Helper method to make the HTTP GET call.
+            *   The url argument is the URL of the external system.
+            *   Returns the response from the external system.
+            **/
+            public String getResponse(String url) {
+                if (System.Test.isRunningTest()) {
+                    // Avoid callouts during tests. Return mock data instead
+                    return mockResponse;
+                } else {
+                    // Perform callouts for production (non-test) results.
+                    Http httpProtocol = new Http();
+                    HttpRequest request = new HttpRequest();
+                    request.setEndPoint(url);
+                    request.setMethod('GET');
+                    request.setHeader('Authorization', 'Bearer '+
+                        this.connectionInfo.oauthToken);
+                    HttpResponse response = httpProtocol.send(request);
+                    return response.getBody();
+                }
+            }
 }
